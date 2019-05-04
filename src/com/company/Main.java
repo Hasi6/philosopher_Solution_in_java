@@ -6,9 +6,9 @@ public class Main {
 
     static int philosopher = 5;
     static philosopher philosophers[] = new philosopher[philosopher];
-    static Fork forks[] = new Fork[philosopher];
+    static chopstick chopsticks[] = new chopstick[philosopher];
 
-    static class Fork {
+    static class chopstick {
 
         public Semaphore mutex = new Semaphore(1);
 
@@ -34,27 +34,27 @@ public class Main {
     static class philosopher extends Thread {
 
         public int number;
-        public Fork leftFork;
-        public Fork rightFork;
+        public chopstick leftchopstick;
+        public chopstick rightchopstick;
 
-        philosopher(int num, Fork left, Fork right) {
+        philosopher(int num, chopstick left, chopstick right) {
             number = num;
-            leftFork = left;
-            rightFork = right;
+            leftchopstick = left;
+            rightchopstick = right;
         }
 
         public void run(){
 
             while (true) {
-                leftFork.grab();
-                System.out.println("philosopher " + (number+1) + " grabs left fork.");
-                rightFork.grab();
-                System.out.println("philosopher " + (number+1) + " grabs right fork.");
+                leftchopstick.grab();
+                System.out.println("philosopher " + (number+1) + " grabs left chopstick.");
+                rightchopstick.grab();
+                System.out.println("philosopher " + (number+1) + " grabs right chopstick.");
                 eat();
-                leftFork.release();
-                System.out.println("philosopher " + (number+1) + " releases left fork.");
-                rightFork.release();
-                System.out.println("philosopher " + (number+1) + " releases right fork.");
+                leftchopstick.release();
+                System.out.println("philosopher " + (number+1) + " releases left chopstick.");
+                rightchopstick.release();
+                System.out.println("philosopher " + (number+1) + " releases right chopstick.");
             }
         }
 
@@ -74,11 +74,11 @@ public class Main {
     public static void main(String argv[]) {
 
         for (int i = 0; i < philosopher; i++) {
-            forks[i] = new Fork();
+            chopsticks[i] = new chopstick();
         }
 
         for (int i = 0; i < philosopher; i++) {
-            philosophers[i] = new philosopher(i, forks[i], forks[(i + 1) % philosopher]);
+            philosophers[i] = new philosopher(i, chopsticks[i], chopsticks[(i + 1) % philosopher]);
             philosophers[i].start();
         }
 
@@ -89,7 +89,7 @@ public class Main {
 
                 // check for deadlock
                 boolean deadlock = true;
-                for (Fork f : forks) {
+                for (chopstick f : chopsticks) {
                     if (f.isFree()) {
                         deadlock = false;
                         break;
@@ -97,7 +97,7 @@ public class Main {
                 }
                 if (deadlock) {
                     Thread.sleep(1000);
-                    System.out.println("Hurray! There is a deadlock!");
+                    System.out.println("Everyone Eats");
                     break;
                 }
             }
